@@ -21,6 +21,45 @@ augroup END
 
 let g:loaded_tabbuffer = 1
 
+"=============================
+" tabbuffers#quit
+"=============================
+" handy quit and write
+nnoremap Q ZQ
+nnoremap <silent> q :call tabbuffers#quit()<CR>
+vnoremap Q ZQ
+vnoremap <silent> q :call tabbuffers#quit()<CR>
+
+inoremap <C-w><C-e> <C-\><C-n>:w<CR>
+inoremap <C-w>d <C-\><C-n>:w<bar>call tabbuffers#quit()<CR>
+inoremap <C-w><C-d> <C-\><C-n>:w<bar>call tabbuffers#quit()<CR>
+
+nnoremap <C-w><C-e> :w<CR>
+nnoremap <C-w>d :w<bar>call tabbuffers#quit()<CR>
+nnoremap <C-w><C-d> :w<bar>call tabbuffers#quit()<CR>
+
+nnoremap <silent> W :w<bar>call tabbuffers#quit()<CR>
+
+"=============================
+" Buffer related mapping
+"=============================
+" enhance buffer navigation
+" require 'Shougo/tabpagebuffer.vim'
+noremap <silent> <C-l> :call tabbuffers#switch('bn')<CR>
+noremap <silent> <C-h> :call tabbuffers#switch('bp')<CR>
+inoremap <silent> <C-l> <C-\><C-n>:call tabbuffers#switch('bn')<CR>
+inoremap <silent> <C-h> <C-\><C-n>:call tabbuffers#switch('bp')<CR>
+
+noremap <silent> + :call tabbuffers#move(1)<CR>
+noremap <silent> - :call tabbuffers#move(-1)<CR>
+" unlist quickfix buffer so that we will not navigate to it
+autocmd FileType qf setlocal nobuflisted
+
+" enhance tabline to show tabpage buffers instead of all buffers
+set showtabline=2
+set tabline=%!tabbuffers#airline#tabline_filtered()
+autocmd VimEnter * :call airline#extensions#tabline#load_theme(g:airline#themes#{g:airline_theme}#palette)
+
 " terminal specific settings
 function! s:setup_term() abort
   tnoremap <buffer> <Esc> <C-\><C-n>
@@ -60,47 +99,4 @@ function! s:append_buf() abort
   let bufnr = expand('<abuf>')
   let t:tabbuffer[bufnr] = max(t:tabbuffer) + 1
   let b:buftab = tabpagenr()
-endfunction
-
-" Get buffers associated with current tab.
-" Not using tabpagebuflist() because it doesn't include background buffers.
-" XXX: consider caching the result
-function! tabbuffers#get() abort
-  if !exists('t:tabbuffer')
-    return []
-  endif
-  let buf_items = sort(items(t:tabbuffer), {item1, item2 -> item1[1] - item2[1]})
-  let bufs = map(buf_items, 'str2nr(v:val[0])')
-  return bufs
-endfunction
-
-function! tabbuffers#switch(offset) abort
-  let next_bufnr = s:next_bufnr(bufnr('%'), a:offset)
-  exec 'b'.next_bufnr
-endfunction
-
-function! tabbuffers#move(offset) abort
-  let bufnr = bufnr('%')
-  let next_bufnr = s:next_bufnr(bufnr, a:offset)
-
-  " swap values in t:tabbuffer
-  let tmp = t:tabbuffer[bufnr]
-  let t:tabbuffer[bufnr] = t:tabbuffer[next_bufnr]
-  let t:tabbuffer[next_bufnr] = tmp
-
-  bn
-  bp
-endfunction
-
-function! s:next_bufnr(bufnr, offset) abort
-  let bufs = tabbuffers#get()
-  let current_index = index(bufs, a:bufnr)
-  let next_index = current_index + a:offset
-  if next_index >= len(bufs)
-    let next_index = 0
-  endif
-  if next_index < 0
-    let next_index = len(bufs) - 1
-  endif
-  return bufs[next_index]
 endfunction

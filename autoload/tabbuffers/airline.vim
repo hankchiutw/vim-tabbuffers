@@ -1,9 +1,5 @@
 
-" enhance tabline to show tabpage buffers instead of all buffers
-set showtabline=2
-set tabline=%!AirlineTablineFiltered()
-autocmd VimEnter * :call airline#extensions#tabline#load_theme(g:airline#themes#{g:airline_theme}#palette)
-function! AirlineTablineFiltered() abort
+function! tabbuffers#airline#tabline_filtered() abort
   let b = airline#extensions#tabline#new_builder()
 
   if get(g:, 'airline#extensions#tabline#buf_label_first', 0)
