@@ -45,10 +45,10 @@ nnoremap <silent> W :w<bar>call tabbuffers#quit()<CR>
 "=============================
 " enhance buffer navigation
 " require 'Shougo/tabpagebuffer.vim'
-noremap <silent> <C-l> :call tabbuffers#switch('bn')<CR>
-noremap <silent> <C-h> :call tabbuffers#switch('bp')<CR>
-inoremap <silent> <C-l> <C-\><C-n>:call tabbuffers#switch('bn')<CR>
-inoremap <silent> <C-h> <C-\><C-n>:call tabbuffers#switch('bp')<CR>
+noremap <silent> <C-l> :call tabbuffers#switch(1)<CR>
+noremap <silent> <C-h> :call tabbuffers#switch(-1)<CR>
+inoremap <silent> <C-l> <C-\><C-n>:call tabbuffers#switch(1)<CR>
+inoremap <silent> <C-h> <C-\><C-n>:call tabbuffers#switch(-1)<CR>
 
 noremap <silent> + :call tabbuffers#move(1)<CR>
 noremap <silent> - :call tabbuffers#move(-1)<CR>
