@@ -7,7 +7,7 @@ function! tabbuffers#airline#tabline_filtered() abort
   endif
 
   let b.overflow_group = 'airline_tabhid'
-  let b.buffers = tabbuffers#get()
+  let b.buffers = tabbuffers#prop_tabbufs#get()
 
   function! b.get_group(i) dict
     let bufnum = get(self.buffers, a:i, -1)

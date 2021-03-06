@@ -8,8 +8,8 @@ augroup tabbuffer
   " assume the top-left window is the main window
   autocmd TabNew,VimEnter * call setwinvar(1, "has_tabbuffers", 1)
 
-  autocmd BufReadPost * call s:append_buf()
-  autocmd BufDelete * call s:unset_buf()
+  autocmd BufReadPost * call tabbuffers#prop_tabbufs#add()
+  autocmd BufDelete * call tabbuffers#prop_tabbufs#unset()
   autocmd BufEnter * call s:jump_to_buftab()
 
   autocmd TermOpen * 
@@ -63,7 +63,7 @@ autocmd VimEnter * :call airline#extensions#tabline#load_theme(g:airline#themes#
 " terminal specific settings
 function! s:setup_term() abort
   tnoremap <buffer> <Esc> <C-\><C-n>
-  autocmd TermClose <buffer> call s:unset_buf()
+  autocmd TermClose <buffer> call tabbuffers#prop_tabbufs#unset()
   autocmd TermClose <buffer> b# | bd! #
   autocmd TermEnter <buffer> call s:jump_to_buftab()
 endfunction
@@ -75,33 +75,4 @@ function! s:jump_to_buftab() abort
     bp
     exec buftab . 'tabn'
   endif
-endfunction
-
-function! s:unset_buf() abort
-  if !exists('t:tabbufs')
-    return
-  endif
-
-  let bufnr = expand('<abuf>')
-  let buf_index = index(t:tabbufs, str2nr(bufnr))
-  if buf_index == -1
-    return
-  endif
-
-  unlet t:tabbufs[buf_index]
-endfunction
-
-" Associate the buffer with the current tab.
-function! s:append_buf() abort
-  if !&buflisted
-    return
-  endif
-
-  if !exists('t:tabbufs')
-    let t:tabbufs = []
-  endif
-
-  let bufnr = expand('<abuf>')
-  call add(t:tabbufs, str2nr(bufnr))
-  let b:buftab = tabpagenr()
 endfunction
