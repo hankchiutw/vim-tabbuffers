@@ -2,12 +2,19 @@
 function! tabbuffers#move(offset) abort
   let bufnr = bufnr('%')
   let buf_index = index(t:tabbufs, bufnr)
-  let next_index = (buf_index + a:offset) % len(t:tabbufs)
-  let next_bufnr = t:tabbufs[next_index]
+  let next_index = buf_index + a:offset
+  let len = len(t:tabbufs)
 
-  " swap values in t:tabbufs
-  let t:tabbufs[buf_index] = next_bufnr
-  let t:tabbufs[next_index] = bufnr
+  call remove(t:tabbufs, buf_index)
+  if a:offset == -1 && next_index == -1
+    " append the first item to the end
+    call add(t:tabbufs, bufnr)
+  elseif a:offset == 1 && next_index == len
+    " prepend the last item to the begin
+    call insert(t:tabbufs, bufnr)
+  else
+    call insert(t:tabbufs, bufnr, next_index)
+  endif
 
   bn
   bp
