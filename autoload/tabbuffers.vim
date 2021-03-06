@@ -16,8 +16,8 @@ function! tabbuffers#move(offset) abort
     call insert(t:tabbufs, bufnr, next_index)
   endif
 
-  bn
-  bp
+  " redraw tabline
+  edit
 endfunction
 
 function! tabbuffers#switch(offset)

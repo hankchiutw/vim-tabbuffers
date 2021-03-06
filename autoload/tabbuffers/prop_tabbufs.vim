@@ -15,8 +15,8 @@ function! tabbuffers#prop_tabbufs#unset() abort
     return
   endif
 
-  let bufnr = expand('<abuf>')
-  let buf_index = index(t:tabbufs, str2nr(bufnr))
+  let bufnr = str2nr(expand('<abuf>'))
+  let buf_index = index(t:tabbufs, bufnr)
   if buf_index == -1
     return
   endif
@@ -33,7 +33,12 @@ function! tabbuffers#prop_tabbufs#add() abort
     let t:tabbufs = []
   endif
 
-  let bufnr = expand('<abuf>')
-  call add(t:tabbufs, str2nr(bufnr))
+  let bufnr = str2nr(expand('<abuf>'))
+  if index(t:tabbufs, bufnr) != -1
+    " already exists
+    return
+  endif
+
+  call add(t:tabbufs, bufnr)
   let b:buftab = tabpagenr()
 endfunction
