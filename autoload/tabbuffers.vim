@@ -3,22 +3,21 @@
 " Not using tabpagebuflist() because it doesn't include background buffers.
 " XXX: consider caching the result
 function! tabbuffers#get() abort
-  if !exists('t:tabbuffer')
+  if !exists('t:tabbufs')
     return []
   endif
-  let buf_items = sort(items(t:tabbuffer), {item1, item2 -> item1[1] - item2[1]})
-  let bufs = map(buf_items, 'str2nr(v:val[0])')
-  return bufs
+  return t:tabbufs
 endfunction
 
 function! tabbuffers#move(offset) abort
   let bufnr = bufnr('%')
-  let next_bufnr = s:next_bufnr(bufnr, a:offset)
+  let buf_index = index(t:tabbufs, bufnr)
+  let next_index = (buf_index + a:offset) % len(t:tabbufs)
+  let next_bufnr = t:tabbufs[next_index]
 
-  " swap values in t:tabbuffer
-  let tmp = t:tabbuffer[bufnr]
-  let t:tabbuffer[bufnr] = t:tabbuffer[next_bufnr]
-  let t:tabbuffer[next_bufnr] = tmp
+  " swap values in t:tabbufs
+  let t:tabbufs[buf_index] = next_bufnr
+  let t:tabbufs[next_index] = bufnr
 
   bn
   bp

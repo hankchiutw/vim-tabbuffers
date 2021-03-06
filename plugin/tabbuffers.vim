@@ -78,12 +78,17 @@ function! s:jump_to_buftab() abort
 endfunction
 
 function! s:unset_buf() abort
-  let bufnr = expand('<abuf>')
-  if !exists('t:tabbuffer') || !has_key(t:tabbuffer, bufnr)
+  if !exists('t:tabbufs')
     return
   endif
 
-  unlet t:tabbuffer[bufnr]
+  let bufnr = expand('<abuf>')
+  let buf_index = index(t:tabbufs, str2nr(bufnr))
+  if buf_index == -1
+    return
+  endif
+
+  unlet t:tabbufs[buf_index]
 endfunction
 
 " Associate the buffer with the current tab.
@@ -92,11 +97,11 @@ function! s:append_buf() abort
     return
   endif
 
-  if !exists('t:tabbuffer')
-    let t:tabbuffer = {}
+  if !exists('t:tabbufs')
+    let t:tabbufs = []
   endif
 
   let bufnr = expand('<abuf>')
-  let t:tabbuffer[bufnr] = max(t:tabbuffer) + 1
+  call add(t:tabbufs, str2nr(bufnr))
   let b:buftab = tabpagenr()
 endfunction
