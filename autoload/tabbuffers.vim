@@ -26,7 +26,7 @@ function! tabbuffers#switch(offset)
   endif
 
   " switch tab buffers instead of loop all buffers
-  if len(tabbuffers#prop_tabbufs#get()) > 1
+  if len(t:tabbufs) > 1
     call s:switch(a:offset)
     return
   endif
@@ -47,6 +47,7 @@ function! tabbuffers#switch(offset)
   endif
 endfunction
 
+" Close the current buffer and back to the last buffer
 function! tabbuffers#quit()
   " delete terminal buffer normally
   " TermClose autocmd in tabbuffers.vim will handle buffer switching
@@ -63,12 +64,11 @@ function! tabbuffers#quit()
 
   lclose
 
-  let tab_listed_bufs = tabbuffers#prop_tabbufs#get()
-  if len(tab_listed_bufs) > 1
-    let is_first = bufnr('%') == tab_listed_bufs[0]
-    " switch buffer, then delete prev buffer
-    call s:switch(is_first ? 1 : -1)
+  if len(t:tabbufs) > 1
+    " to keep the window open
+    enew
     bd! #
+    exec 'b' . t:mrubufs[-1]
   elseif winnr('$') == 1
     " only one window and one buffer
     q!

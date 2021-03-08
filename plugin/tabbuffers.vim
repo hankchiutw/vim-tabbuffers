@@ -12,6 +12,9 @@ augroup tabbuffer
   autocmd BufDelete * call tabbuffers#prop_tabbufs#unset()
   autocmd BufEnter * call s:jump_to_buftab()
 
+  autocmd BufDelete * call tabbuffers#prop_mrubufs#unset()
+  autocmd BufEnter * call tabbuffers#prop_mrubufs#add()
+
   autocmd TermOpen * 
         \ call s:append_buf() |
         \ if (exists('w:has_tabbuffers')) | set ft=tabbuffers-terminal | endif
