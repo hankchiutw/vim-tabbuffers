@@ -16,7 +16,7 @@ augroup tabbuffer
   autocmd BufEnter * call tabbuffers#prop_mrubufs#add()
 
   autocmd TermOpen * 
-        \ call s:append_buf() |
+        \ call tabbuffers#prop_tabbufs#add() |
         \ if (exists('w:has_tabbuffers')) | set ft=tabbuffers-terminal | endif
 
   autocmd FileType tabbuffers-terminal call s:setup_term()
