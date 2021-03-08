@@ -23,6 +23,7 @@ augroup tabbuffer
 augroup END
 
 let g:loaded_tabbuffer = 1
+let g:tabbuffers_mru_size = 20
 
 "=============================
 " tabbuffers#quit

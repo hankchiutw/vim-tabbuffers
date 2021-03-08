@@ -42,4 +42,7 @@ function! tabbuffers#prop_mrubufs#add() abort
   endif
 
   call add(t:mrubufs, bufnr)
+  if len(t:mrubufs) > g:tabbuffers_mru_size
+    call remove(t:mrubufs, 0)
+  endif
 endfunction

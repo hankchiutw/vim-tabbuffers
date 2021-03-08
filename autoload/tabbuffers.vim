@@ -68,7 +68,7 @@ function! tabbuffers#quit()
     " to keep the window open
     enew
     bd! #
-    exec 'b' . t:mrubufs[-1]
+    exec 'b' . (empty(t:mrubufs) ? t:tabbufs[0] : t:mrubufs[-1])
   elseif winnr('$') == 1
     " only one window and one buffer
     q!
