@@ -8,18 +8,22 @@ augroup tabbuffer
   " assume the top-left window is the main window
   autocmd TabNew,VimEnter * call setwinvar(1, "has_tabbuffers", 1)
 
-  autocmd BufReadPost * call s:append_buf()
-  autocmd BufDelete * call s:unset_buf()
+  autocmd BufReadPost * call tabbuffers#prop_tabbufs#add()
+  autocmd BufDelete * call tabbuffers#prop_tabbufs#unset()
   autocmd BufEnter * call s:jump_to_buftab()
 
+  autocmd BufDelete * call tabbuffers#prop_mrubufs#unset()
+  autocmd BufEnter * call tabbuffers#prop_mrubufs#add()
+
   autocmd TermOpen * 
-        \ call s:append_buf() |
+        \ call tabbuffers#prop_tabbufs#add() |
         \ if (exists('w:has_tabbuffers')) | set ft=tabbuffers-terminal | endif
 
   autocmd FileType tabbuffers-terminal call s:setup_term()
 augroup END
 
 let g:loaded_tabbuffer = 1
+let g:tabbuffers_mru_size = 20
 
 "=============================
 " tabbuffers#quit
@@ -45,10 +49,10 @@ nnoremap <silent> W :w<bar>call tabbuffers#quit()<CR>
 "=============================
 " enhance buffer navigation
 " require 'Shougo/tabpagebuffer.vim'
-noremap <silent> <C-l> :call tabbuffers#switch('bn')<CR>
-noremap <silent> <C-h> :call tabbuffers#switch('bp')<CR>
-inoremap <silent> <C-l> <C-\><C-n>:call tabbuffers#switch('bn')<CR>
-inoremap <silent> <C-h> <C-\><C-n>:call tabbuffers#switch('bp')<CR>
+noremap <silent> <C-l> :call tabbuffers#switch(1)<CR>
+noremap <silent> <C-h> :call tabbuffers#switch(-1)<CR>
+inoremap <silent> <C-l> <C-\><C-n>:call tabbuffers#switch(1)<CR>
+inoremap <silent> <C-h> <C-\><C-n>:call tabbuffers#switch(-1)<CR>
 
 noremap <silent> + :call tabbuffers#move(1)<CR>
 noremap <silent> - :call tabbuffers#move(-1)<CR>
@@ -63,7 +67,7 @@ autocmd VimEnter * :call airline#extensions#tabline#load_theme(g:airline#themes#
 " terminal specific settings
 function! s:setup_term() abort
   tnoremap <buffer> <Esc> <C-\><C-n>
-  autocmd TermClose <buffer> call s:unset_buf()
+  autocmd TermClose <buffer> call tabbuffers#prop_tabbufs#unset()
   autocmd TermClose <buffer> b# | bd! #
   autocmd TermEnter <buffer> call s:jump_to_buftab()
 endfunction
@@ -75,28 +79,4 @@ function! s:jump_to_buftab() abort
     bp
     exec buftab . 'tabn'
   endif
-endfunction
-
-function! s:unset_buf() abort
-  let bufnr = expand('<abuf>')
-  if !exists('t:tabbuffer') || !has_key(t:tabbuffer, bufnr)
-    return
-  endif
-
-  unlet t:tabbuffer[bufnr]
-endfunction
-
-" Associate the buffer with the current tab.
-function! s:append_buf() abort
-  if !&buflisted
-    return
-  endif
-
-  if !exists('t:tabbuffer')
-    let t:tabbuffer = {}
-  endif
-
-  let bufnr = expand('<abuf>')
-  let t:tabbuffer[bufnr] = max(t:tabbuffer) + 1
-  let b:buftab = tabpagenr()
 endfunction
