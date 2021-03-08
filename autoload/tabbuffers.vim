@@ -64,7 +64,7 @@ function! tabbuffers#quit()
 
   lclose
 
-  if len(t:tabbufs) > 1
+  if len(tabbuffers#prop_tabbufs#get()) > 1
     " to keep the window open
     enew
     bd! #
