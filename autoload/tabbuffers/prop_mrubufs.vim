@@ -16,12 +16,12 @@ function! tabbuffers#prop_mrubufs#unset() abort
 endfunction
 
 function! tabbuffers#prop_mrubufs#add() abort
-  if !&buflisted
-    return
-  endif
-
   if !exists('t:mrubufs')
     let t:mrubufs = []
+  endif
+
+  if !&buflisted
+    return
   endif
 
   let bufnr = bufnr('#')
@@ -41,7 +41,12 @@ function! tabbuffers#prop_mrubufs#add() abort
     return
   endif
 
-  call add(t:mrubufs, bufnr)
+  " actually add append buffer below
+  call s:append_buf(bufnr)
+endfunction
+
+function! s:append_buf(bufnr) abort
+  call add(t:mrubufs, a:bufnr)
   if len(t:mrubufs) > g:tabbuffers_mru_size
     call remove(t:mrubufs, 0)
   endif
