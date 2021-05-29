@@ -69,6 +69,8 @@ function! tabbuffers#quit()
     enew
     bd! #
     exec 'b' . (empty(t:mrubufs) ? t:tabbufs[0] : t:mrubufs[-1])
+    " delete the temporary empty buffer
+    bd! #
   elseif winnr('$') == 1
     " only one window and one buffer
     q!
