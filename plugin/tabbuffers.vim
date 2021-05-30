@@ -56,6 +56,10 @@ inoremap <silent> <C-h> <C-\><C-n>:call tabbuffers#switch(-1)<CR>
 
 noremap <silent> + :call tabbuffers#move(1)<CR>
 noremap <silent> - :call tabbuffers#move(-1)<CR>
+
+nnoremap ~ :call tabbuffers#prop_mrubufs#back()<CR>
+nnoremap ! :call tabbuffers#prop_mrubufs#forward()<CR>
+
 " unlist quickfix buffer so that we will not navigate to it
 autocmd FileType qf setlocal nobuflisted
 
