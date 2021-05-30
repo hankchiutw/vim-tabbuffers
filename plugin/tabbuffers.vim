@@ -15,11 +15,13 @@ augroup tabbuffer
   autocmd BufDelete * call tabbuffers#prop_mrubufs#unset()
   autocmd BufEnter * call tabbuffers#prop_mrubufs#add()
 
-  autocmd TermOpen * 
-        \ call tabbuffers#prop_tabbufs#add() |
-        \ if (exists('w:has_tabbuffers')) | set ft=tabbuffers-terminal | endif
+  if has('nvim')
+    autocmd TermOpen * 
+          \ call tabbuffers#prop_tabbufs#add() |
+          \ if (exists('w:has_tabbuffers')) | set ft=tabbuffers-terminal | endif
 
-  autocmd FileType tabbuffers-terminal call s:setup_term()
+    autocmd FileType tabbuffers-terminal call s:setup_term()
+  endif
 augroup END
 
 let g:loaded_tabbuffer = 1
