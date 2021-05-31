@@ -26,7 +26,7 @@ function! tabbuffers#switch(offset)
   endif
 
   " switch tab buffers instead of loop all buffers
-  if len(t:tabbufs) > 1
+  if exists('t:tabbufs') && len(t:tabbufs) > 1
     call s:switch(a:offset)
     return
   endif
