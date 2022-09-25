@@ -48,11 +48,6 @@ nnoremap <Plug>(TabbuffersMruForward) :call tabbuffers#prop_mrubufs#forward()<CR
 " unlist quickfix buffer so that we will not navigate to it
 autocmd FileType qf setlocal nobuflisted
 
-" enhance tabline to show tabpage buffers instead of all buffers
-set showtabline=2
-set tabline=%!tabbuffers#airline#tabline_filtered()
-autocmd VimEnter * :call airline#extensions#tabline#load_theme(g:airline#themes#{g:airline_theme}#palette)
-
 " terminal specific settings
 function! s:setup_term() abort
   tnoremap <buffer> <Esc> <C-\><C-n>
