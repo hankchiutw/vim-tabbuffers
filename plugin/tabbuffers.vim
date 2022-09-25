@@ -16,7 +16,7 @@ augroup tabbuffer
   autocmd BufEnter * call tabbuffers#prop_mrubufs#add()
 
   if has('nvim')
-    autocmd TermOpen * 
+    autocmd TermOpen *
           \ call tabbuffers#prop_tabbufs#add() |
           \ if (exists('w:has_tabbuffers')) | set ft=tabbuffers-terminal | endif
 
@@ -31,36 +31,19 @@ let g:tabbuffers_mru_size = 20
 " tabbuffers#quit
 "=============================
 " handy quit and write
-nnoremap Q ZQ
-nnoremap <silent> q :call tabbuffers#quit()<CR>
-vnoremap Q ZQ
-vnoremap <silent> q :call tabbuffers#quit()<CR>
-
-inoremap <C-w><C-e> <C-\><C-n>:w<CR>
-inoremap <C-w>d <C-\><C-n>:w<bar>call tabbuffers#quit()<CR>
-inoremap <C-w><C-d> <C-\><C-n>:w<bar>call tabbuffers#quit()<CR>
-
-nnoremap <C-w><C-e> :w<CR>
-nnoremap <C-w>d :w<bar>call tabbuffers#quit()<CR>
-nnoremap <C-w><C-d> :w<bar>call tabbuffers#quit()<CR>
-
-nnoremap <silent> W :w<bar>call tabbuffers#quit()<CR>
+nnoremap <Plug>(TabbuffersQuit) :call tabbuffers#quit()<CR>
 
 "=============================
 " Buffer related mapping
 "=============================
 " enhance buffer navigation
 " require 'Shougo/tabpagebuffer.vim'
-noremap <silent> <C-l> :call tabbuffers#switch(1)<CR>
-noremap <silent> <C-h> :call tabbuffers#switch(-1)<CR>
-inoremap <silent> <C-l> <C-\><C-n>:call tabbuffers#switch(1)<CR>
-inoremap <silent> <C-h> <C-\><C-n>:call tabbuffers#switch(-1)<CR>
-
-noremap <silent> + :call tabbuffers#move(1)<CR>
-noremap <silent> - :call tabbuffers#move(-1)<CR>
-
-nnoremap ~ :call tabbuffers#prop_mrubufs#back()<CR>
-nnoremap ! :call tabbuffers#prop_mrubufs#forward()<CR>
+noremap <silent> <Plug>(TabbuffersSwitchRight) :call tabbuffers#switch(1)<CR>
+noremap <silent> <Plug>(TabbuffersSwitchLeft) :call tabbuffers#switch(-1)<CR>
+noremap <silent> <Plug>(TabbuffersMoveRight) :call tabbuffers#move(1)<CR>
+noremap <silent> <Plug>(TabbuffersMoveLeft) :call tabbuffers#move(-1)<CR>
+nnoremap <Plug>(TabbuffersMruBack) :call tabbuffers#prop_mrubufs#back()<CR>
+nnoremap <Plug>(TabbuffersMruForward) :call tabbuffers#prop_mrubufs#forward()<CR>
 
 " unlist quickfix buffer so that we will not navigate to it
 autocmd FileType qf setlocal nobuflisted
